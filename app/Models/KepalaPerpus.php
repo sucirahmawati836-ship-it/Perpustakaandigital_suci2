@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class kepala_perpus extends Model
+class KepalaPerpus extends Model
 {
     protected $table = 'kepala_perpus';
 
     protected $fillable = [
         'user_id',
-        'nip',
+        'nip_KepalaPerpus',
     ];
 
     public function user()

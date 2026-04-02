@@ -10,7 +10,7 @@ class petugas extends Model
 
     protected $fillable = [
         'user_id',
-        'nip',
+        'nip_petugas',
         'no_hp',
     ];
 

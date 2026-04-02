@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class KepalaPerpusController extends Controller
+class kepala_perpusController extends Controller
 {
     //
 }
