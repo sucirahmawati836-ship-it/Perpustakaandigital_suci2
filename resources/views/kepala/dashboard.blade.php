@@ -1,0 +1,64 @@
+@extends('layouts.app')
+
+@section('content')
+
+<div class="container-fluid">
+
+    <h3 class="mb-4 fw-bold">Dashboard Kepala Perpustakaan</h3>
+
+    <div class="row">
+
+        <!-- TOTAL AKUN -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm" style="background:#e7f1ff;">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Total Akun</h6>
+                        <h1 class="fw-bold text-primary">{{ $totalAkun }}</h1>
+                    </div>
+                    <div style="font-size:40px;">👥</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTAL BUKU -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm" style="background:#e8f8f0;">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Total Buku</h6>
+                        <h1 class="fw-bold text-success">{{ $totalBuku }}</h1>
+                    </div>
+                    <div style="font-size:40px;">📚</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTAL ANGGOTA -->
+        <div class="col-md-4 mb-3">
+            <div class="card border-0 shadow-sm" style="background:#fff8e1;">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted">Total Peminjaman</h6>
+                        <h1 class="fw-bold text-warning">{{ $totalAnggota }}</h1>
+                    </div>
+                    <div style="font-size:40px;">🧑‍🎓</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CARD TAMBAHAN -->
+    <div class="card shadow-sm mt-3 border-0">
+        <div class="card-body">
+            <h5 class="fw-bold">Selamat Datang 👋</h5>
+            <p class="mb-0 text-muted">
+                Silakan kelola data perpustakaan melalui menu di samping.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+@endsection

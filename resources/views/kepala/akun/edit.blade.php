@@ -4,7 +4,7 @@
 <div class="p-4">
     <h3 class="mb-3">Edit Akun - {{ $user->name }}</h3>
 
-    <form action="{{ route('akun.update', $user->id) }}" method="POST">
+    <form action="{{ route('kepala.akun.update', $user->id) }}" method="POST">
         @method('PUT')
         @csrf
 
@@ -73,7 +73,7 @@
         @endif
 
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('akun.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('kepala.akun.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

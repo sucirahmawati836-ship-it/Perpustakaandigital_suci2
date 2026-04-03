@@ -4,7 +4,7 @@
 <div class="p-4">
     <h3 class="mb-3">Tambah Akun</h3>
 
-    <form action="{{ route('akun.store') }}" method="POST">
+    <form action="{{ route('kepala.akun.store') }}" method="POST">
         @csrf
 
         <!-- Level -->
@@ -92,7 +92,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('akun.index') }}" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('kepala.akun.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>
 @endsection

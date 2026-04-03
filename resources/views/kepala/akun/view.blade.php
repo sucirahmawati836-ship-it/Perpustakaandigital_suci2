@@ -59,11 +59,11 @@
 `       <td>{{ optional($user->updated_at)->format('d-m-Y H:i') }}</td>
     </table>
 
-    <a href="{{ route('akun.edit', $user->id) }}" class="btn btn-warning text-white">Edit</a>
-    <form action="{{ route('akun.destroy', $user->id) }}" method="POST" class="d-inline">
+    <a href="{{ route('kepala.akun.edit', $user->id) }}" class="btn btn-warning text-white">Edit</a>
+    <form action="{{ route('kepala.akun.destroy', $user->id) }}" method="POST" class="d-inline">
         @csrf @method('DELETE')
         <button type="submit" class="btn btn-danger" onclick="return confirm('Hapus akun ini?')">Hapus</button>
     </form>
-    <a href="{{ route('akun.index') }}" class="btn btn-secondary">Kembali</a>
+    <a href="{{ route('kepala.akun.index') }}" class="btn btn-secondary">Kembali</a>
 </div>
 @endsection

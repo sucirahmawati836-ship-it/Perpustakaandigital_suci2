@@ -18,13 +18,13 @@ class AkunController extends Controller
     {
         // Mengambil semua user, urutkan terbaru
         $users = User::orderBy('created_at', 'desc')->get();
-        return view('akun.index', compact('users'));
+        return view('kepala.akun.index', compact('users'));
     }
 
     // FORM TAMBAH AKUN
     public function create()
     {
-        return view('akun.create');
+        return view('kepala.akun.create');
     }
 
     // SIMPAN KE DATABASE (LOGIKA DINAMIS)
@@ -88,7 +88,7 @@ class AkunController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('akun.index')->with('success', 'Akun ' . $request->level . ' berhasil dibuat!');
+            return redirect()->route('kepala.akun.index')->with('success', 'Akun ' . $request->level . ' berhasil dibuat!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -110,7 +110,7 @@ class AkunController extends Controller
             $user->load('kepala');
         }
 
-        return view('akun.edit', compact('user'));
+        return view('kepala.akun.edit', compact('user'));
     }
 
     // UPDATE DATABASE
@@ -161,7 +161,7 @@ class AkunController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('akun.index')->with('success', 'Akun berhasil diperbarui!');
+            return redirect()->route('kepala.akun.index')->with('success', 'Akun berhasil diperbarui!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -182,7 +182,7 @@ class AkunController extends Controller
         $user->load('kepala');
     }
 
-    return view('akun.view', compact('user'));
+    return view('kepala.akun.view', compact('user'));
 }
 
     // HAPUS AKUN
@@ -191,6 +191,6 @@ class AkunController extends Controller
         // Karena pakai cascadeOnDelete() di migration, 
         // menghapus user OTOMATIS menghapus data anggota/petugas/kepalanya
         User::destroy($id);
-        return redirect()->route('akun.index')->with('success', 'Akun berhasil dihapus!');
+        return redirect()->route('kepala.akun.index')->with('success', 'Akun berhasil dihapus!');
     }
 }
