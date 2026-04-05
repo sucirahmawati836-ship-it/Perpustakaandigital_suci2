@@ -41,13 +41,24 @@
 
         {{-- Profile --}}
         <li class="nav-item mb-2">
-            <a href="/profile" 
-               class="nav-link sidebar-link {{ request()->is('profile') ? 'active' : '' }}">
+            <a href="{{ route('kepala.profile.index') }}" 
+                class="nav-link sidebar-link {{ request()->routeIs('kepala.profile.index') ? 'active' : '' }}">
                 <i class="bi bi-person-circle"></i> Profile
             </a>
         </li>
 
+        {{-- Logout --}}
+       <li class="nav-item mt-4">
+         <form action="{{ route('logout') }}" method="POST">
+        @csrf
+         <button type="submit" class="nav-link sidebar-link border-0 bg-transparent w-100 text-start">
+            <i class="bi bi-box-arrow-right"></i> Logout
+         </button>
+        </form>
+</li>
+
     </ul>
+
 
 </div>
 
@@ -62,7 +73,7 @@
     transition: 0.3s;
     display: flex;
     align-items: center;
-    gap: 10px; /* jarak icon & teks */
+    gap: 10px;
 }
 
 /* Hover effect */
@@ -71,7 +82,7 @@
     padding-left: 10px;
 }
 
-/* Active (halaman sekarang) */
+/* Active */
 .sidebar-link.active {
     background-color: #2faa4de5;
     font-weight: bold;

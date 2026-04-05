@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('kepala.layouts.app')
 
 @section('content')
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\KepalaPerpus;
 
 use App\Models\Anggota;
 use App\Models\KepalaPerpus;

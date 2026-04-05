@@ -1,53 +1,91 @@
 <?php
 
+use App\Http\Controllers\KepalaPerpus\AkunController;
+use App\Http\Controllers\KepalaPerpus\BukuController;
+use App\Http\Controllers\KepalaPerpus\KepalaPerpusController;
+use App\Http\Controllers\Petugas\BukuController as PetugasBukuController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AkunController;
-use App\Http\Controllers\BukuController;
-use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
-| Redirect Awal
+| ROUTE KEPALA PERPUSTAKAAN
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return redirect()->route('kepala.akun.index');
+Route::prefix('kepala')->name('kepala.')->group(function () {
+
+    /*
+    |----------------------------------
+    | DASHBOARD
+    |----------------------------------
+    */
+    Route::view('/dashboard', 'kepala.dashboard')->name('dashboard');
+
+    /*
+    |----------------------------------
+    | PROFILE
+    |----------------------------------
+    */
+    Route::get('/profile', [KepalaPerpusController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit/{id}', [KepalaPerpusController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [KepalaPerpusController::class, 'update'])->name('update');
+
+    /*
+    |----------------------------------
+    | MANAJEMEN AKUN
+    |----------------------------------
+    */
+    Route::prefix('akun')->name('akun.')->group(function () {
+
+        Route::get('/', [AkunController::class, 'index'])->name('index');
+        Route::get('/create', [AkunController::class, 'create'])->name('create');
+        Route::post('/store', [AkunController::class, 'store'])->name('store');
+
+        Route::get('/{id}/detail', [AkunController::class, 'detail'])->name('detail');
+        Route::get('/{id}/edit', [AkunController::class, 'edit'])->name('edit');
+        Route::put('/{id}/update', [AkunController::class, 'update'])->name('update');
+        Route::delete('/{id}/delete', [AkunController::class, 'destroy'])->name('destroy');
+    });
+
+    /*
+    |----------------------------------
+    | MANAJEMEN BUKU
+    |----------------------------------
+    */
+    Route::prefix('buku')->name('buku.')->group(function () {
+
+        Route::get('/', [BukuController::class, 'index'])->name('index');
+        Route::get('/create', [BukuController::class, 'create'])->name('create');
+        Route::post('/store', [BukuController::class, 'store'])->name('store');
+
+        Route::get('/{buku}/edit', [BukuController::class, 'edit'])->name('edit');
+        Route::put('/{buku}/update', [BukuController::class, 'update'])->name('update');
+        Route::delete('/{buku}/delete', [BukuController::class, 'destroy'])->name('destroy');
+    });
+
 });
 
 /*
 |--------------------------------------------------------------------------
-| ROUTE KEPALA PERPUSTAKAAN 
+| ROUTE PETUGAS
 |--------------------------------------------------------------------------
 */
+Route::prefix('buku')->name('petugas.buku.')->group(function () {
 
-// - MANAJEMEN AKUN
-Route::prefix('akun')->name('kepala.akun.')->group(function () {
+    Route::get('/', [PetugasBukuController::class, 'index'])->name('index');
+    Route::get('/create', [PetugasBukuController::class, 'create'])->name('create');
+    Route::post('/store', [PetugasBukuController::class, 'store'])->name('store');
 
-    Route::get('/', [AkunController::class, 'index'])->name('index');
-    Route::get('/create', [AkunController::class, 'create'])->name('create');
-    Route::post('/store', [AkunController::class, 'store'])->name('store');
-
-    Route::get('/{id}/detail', [AkunController::class, 'detail'])->name('detail');
-    Route::get('/{id}/edit', [AkunController::class, 'edit'])->name('edit');
-    Route::put('/{id}/update', [AkunController::class, 'update'])->name('update');
-    Route::delete('/{id}/delete', [AkunController::class, 'destroy'])->name('destroy');
-
+    Route::get('/{buku}/edit', [PetugasBukuController::class, 'edit'])->name('edit');
+    Route::put('/{buku}/update', [PetugasBukuController::class, 'update'])->name('update');
+    Route::delete('/{buku}/delete', [PetugasBukuController::class, 'destroy'])->name('destroy');
 });
 
-// - MANAJEMEN BUKU
-Route::prefix('buku')->name('kepala.buku.')->group(function () {
 
-    Route::get('/', [BukuController::class, 'index'])->name('index');
-    Route::get('/create', [BukuController::class, 'create'])->name('create');
-    Route::post('/store', [BukuController::class, 'store'])->name('store');
-
-    Route::get('/{buku}/edit', [BukuController::class, 'edit'])->name('edit');
-    Route::put('/{buku}/update', [BukuController::class, 'update'])->name('update');
-    Route::delete('/{buku}/delete', [BukuController::class, 'destroy'])->name('destroy');
-
-});
-
-//DASHBOARD
-    Route::get('/kepala/dashboard', [DashboardController::class, 'index'])
-    ->name('kepala.dashboard');
-
+/*
+|--------------------------------------------------------------------------
+| LOGOUT (TAMBAHAN)
+|--------------------------------------------------------------------------
+*/
+Route::post('/logout', function () {
+    auth()->logout();
+    return redirect('/');})->name('logout'); // bisa diganti ke /login kalau ada

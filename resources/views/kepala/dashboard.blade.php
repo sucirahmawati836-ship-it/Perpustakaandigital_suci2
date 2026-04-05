@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('kepala.layouts.app')
 
 @section('content')
 
@@ -14,7 +14,7 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="text-muted">Total Akun</h6>
-                        <h1 class="fw-bold text-primary">{{ $totalAkun }}</h1>
+                        <h1 class="fw-bold text-primary">0</h1>
                     </div>
                     <div style="font-size:40px;">👥</div>
                 </div>
@@ -27,20 +27,20 @@
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="text-muted">Total Buku</h6>
-                        <h1 class="fw-bold text-success">{{ $totalBuku }}</h1>
+                        <h1 class="fw-bold text-success">0</h1>
                     </div>
                     <div style="font-size:40px;">📚</div>
                 </div>
             </div>
         </div>
 
-        <!-- TOTAL ANGGOTA -->
+        <!-- TOTAL PEMINJAMAN -->
         <div class="col-md-4 mb-3">
             <div class="card border-0 shadow-sm" style="background:#fff8e1;">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="text-muted">Total Peminjaman</h6>
-                        <h1 class="fw-bold text-warning">{{ $totalAnggota }}</h1>
+                        <h1 class="fw-bold text-warning">0</h1>
                     </div>
                     <div style="font-size:40px;">🧑‍🎓</div>
                 </div>

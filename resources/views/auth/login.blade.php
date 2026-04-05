@@ -1,44 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
-    @vite('resources/css/app.css')
+    <title>Login E-Perpus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#eaf4f1] flex items-center justify-center h-screen">
+<body style="background:#f4f6f9;">
 
-    <div class="bg-white p-8 rounded-2xl shadow-lg w-[350px]">
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow" style="width:350px; border-radius:15px;">
         
-        <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">
-            Login Perpustakaan
-        </h2>
+        <h4 class="text-center mb-3">Login E-Perpus</h4>
 
-        <form method="POST" action="{{ route('login') }}">
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <form method="POST" action="/login">
             @csrf
 
-            <div class="mb-4">
-                <input type="email" name="email" placeholder="Email"
-                    class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-                    value="{{ old('email') }}">
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
 
-            <div class="mb-4">
-                <input type="password" name="password" placeholder="Password"
-                    class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
             </div>
 
-            <button class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-                Login
-            </button>
-
-            <p class="text-center mt-4 text-sm">
-                Belum punya akun?
-                <a href="{{ route('register') }}" class="text-green-600 font-medium">
-                    Daftar
-                </a>
-            </p>
+            <button class="btn btn-primary w-100">Login</button>
         </form>
 
     </div>
+</div>
 
 </body>
 </html>
