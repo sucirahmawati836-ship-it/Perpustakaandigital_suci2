@@ -5,7 +5,13 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class user extends Authenticatable
+// IMPORT MODEL
+use App\Models\Anggota;
+use App\Models\Petugas;
+use App\Models\KepalaPerpus;
+use App\Models\Peminjaman;
+
+class User extends Authenticatable
 {
     use Notifiable;
 
@@ -13,7 +19,7 @@ class user extends Authenticatable
         'name',
         'email',
         'password',
-        'level',
+        'role',
     ];
 
     protected $hidden = [
@@ -21,18 +27,23 @@ class user extends Authenticatable
     ];
 
     // Relasi
-    public function Anggota()
+    public function anggota()
     {
         return $this->hasOne(Anggota::class);
     }
 
     public function petugas()
     {
-        return $this->hasOne(petugas::class);
+        return $this->hasOne(Petugas::class);
     }
 
     public function kepala()
     {
         return $this->hasOne(KepalaPerpus::class);
+    }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class);
     }
 }

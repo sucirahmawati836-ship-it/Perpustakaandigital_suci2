@@ -18,11 +18,11 @@
             <td>{{ $user->email }}</td>
         </tr>
         <tr>
-            <th>Level</th>
-            <td>{{ ucfirst($user->level) }}</td>
+            <th>role</th>
+            <td>{{ ucfirst($user->role) }}</td>
         </tr>
 
-        @if($user->level == 'anggota' && $user->anggota)
+        @if($user->role == 'anggota' && $user->anggota)
         <tr>
             <th>NIS</th>
             <td>{{ $user->anggota->nis }}</td>
@@ -37,7 +37,7 @@
         </tr>
         @endif
 
-        @if($user->level == 'petugas' && $user->petugas)
+        @if($user->role == 'petugas' && $user->petugas)
         <tr>
             <th>NIP</th>
             <td>{{ $user->petugas->nip_petugas ?? '-' }}</td>
@@ -48,7 +48,7 @@
         </tr>
         @endif
 
-        @if($user->level == 'kepala' && $user->kepala)
+        @if($user->role == 'kepala' && $user->kepala)
         <tr>
             <th>NIP</th>
             <td>{{ $user->kepala->nip_KepalaPerpus ?? '-' }}</td>

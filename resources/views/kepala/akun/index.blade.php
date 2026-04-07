@@ -27,7 +27,7 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Email</th>
-                        <th>Level</th>
+                        <th>role</th>
                         <th>Identitas</th>
                         <th width="180">Aksi</th>
                     </tr>
@@ -39,14 +39,14 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ ucfirst($user->level) }}</td>
+                        <td>{{ ucfirst($user->role) }}</td>
 
                         <td>
-                            @if($user->level == 'anggota' && $user->anggota)
+                            @if($user->role == 'anggota' && $user->anggota)
                                 NIS: {{ $user->anggota->nis }} / {{ $user->anggota->kelas }}
-                            @elseif($user->level == 'petugas' && $user->petugas)
+                            @elseif($user->role == 'petugas' && $user->petugas)
                                 NIP: {{ $user->petugas->nip_petugas ?? '-' }}
-                            @elseif($user->level == 'kepala' && $user->kepala)
+                            @elseif($user->role == 'kepala' && $user->kepala)
                                 NIP: {{ $user->kepala->nip_KepalaPerpus ?? '-' }}
                             @else
                                 -

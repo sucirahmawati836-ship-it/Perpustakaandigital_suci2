@@ -9,9 +9,9 @@
         @csrf
 
         <div class="mb-3">
-            <label class="form-label">Level</label>
-            <input type="text" class="form-control" value="{{ ucfirst($user->level) }}" disabled>
-            <small class="text-muted">Level tidak bisa diubah</small>
+            <label class="form-label">role</label>
+            <input type="text" class="form-control" value="{{ ucfirst($user->role) }}" disabled>
+            <small class="text-muted">role tidak bisa diubah</small>
         </div>
 
         <div class="mb-3">
@@ -28,7 +28,7 @@
 
         <hr>
 
-        @if($user->level == 'anggota' && $user->anggota)
+        @if($user->role == 'anggota' && $user->anggota)
         <h5 class="mb-2">Data Anggota</h5>
         <div class="row mb-3">
             <div class="col">
@@ -48,7 +48,7 @@
         </div>
         @endif
 
-        @if($user->level == 'petugas' && $user->petugas)
+        @if($user->role == 'petugas' && $user->petugas)
         <h5 class="mb-2">Data Petugas</h5>
         <div class="row mb-3">
             <div class="col">
@@ -63,7 +63,7 @@
         </div>
         @endif
 
-        @if($user->level == 'kepala' && $user->kepala)
+        @if($user->role == 'kepala' && $user->kepala)
         <h5 class="mb-2">Data Kepala Perpus</h5>
         <div class="mb-3">
             <label class="form-label">NIP</label>

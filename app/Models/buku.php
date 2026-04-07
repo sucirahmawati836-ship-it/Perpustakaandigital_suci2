@@ -14,8 +14,8 @@ class Buku extends Model
         return $this->belongsTo(kepala_perpus::class);
     }
 
-    // public function peminjaman()
-    // {
-    //     return $this->hasMany(PeminjamanBuku::class, 'buku_id');
-    // }
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'buku_id');
+    }
 }

@@ -2,64 +2,57 @@
 <html>
 <head>
     <title>Register</title>
-    @vite('resources/css/app.css')
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#eaf4f1] flex items-center justify-center h-screen">
+<body class="bg-gray-100 flex items-center justify-center h-screen">
 
-    <div class="bg-white p-8 rounded-2xl shadow-lg w-[350px]">
+<div class="bg-white p-8 rounded-xl shadow-lg w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center">Register Anggota</h2>
 
-        <h2 class="text-2xl font-semibold text-center mb-6 text-gray-700">
-            Daftar Akun
-        </h2>
+    {{-- ERROR --}}
+    @if($errors->any())
+        <div class="bg-red-100 text-red-700 p-2 mb-3 rounded">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+    <form method="POST" action="/auth/register">
+        @csrf
 
-            <div class="mb-3">
-                <input type="text" name="name" placeholder="Nama"
-                    class="w-full p-2 border rounded-lg"
-                    value="{{ old('name') }}">
-            </div>
+        {{-- NAMA --}}
+        <input type="text" name="name" placeholder="Nama"
+            class="w-full mb-3 p-2 border rounded">
 
-            <div class="mb-3">
-                <input type="email" name="email" placeholder="Email"
-                    class="w-full p-2 border rounded-lg"
-                    value="{{ old('email') }}">
-            </div>
+        {{-- EMAIL --}}
+        <input type="email" name="email" placeholder="Email"
+            class="w-full mb-3 p-2 border rounded">
 
-            <div class="mb-3">
-                <select name="role" class="w-full p-2 border rounded-lg">
-                    <option value="">Pilih Role</option>
-                    <option value="anggota">Anggota</option>
-                    <option value="petugas">Petugas</option>
-                    <option value="kepala">Kepala Perpus</option>
-                </select>
-            </div>
+        {{-- PASSWORD --}}
+        <input type="password" name="password" placeholder="Password"
+            class="w-full mb-3 p-2 border rounded">
 
-            <div class="mb-3">
-                <input type="password" name="password" placeholder="Password"
-                    class="w-full p-2 border rounded-lg">
-            </div>
+        {{-- KONFIRMASI PASSWORD --}}
+        <input type="password" name="password_confirmation" placeholder="Konfirmasi Password"
+            class="w-full mb-3 p-2 border rounded">
 
-            <div class="mb-4">
-                <input type="password" name="password_confirmation" placeholder="Konfirmasi Password"
-                    class="w-full p-2 border rounded-lg">
-            </div>
+        {{-- NIS --}}
+        <input type="text" name="nis" placeholder="NIS"
+            class="w-full mb-3 p-2 border rounded">
 
-            <button class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-                Register
-            </button>
+        {{-- KELAS --}}
+        <input type="text" name="kelas" placeholder="Kelas"
+            class="w-full mb-4 p-2 border rounded">
 
-            <p class="text-center mt-4 text-sm">
-                Sudah punya akun?
-                <a href="{{ route('login') }}" class="text-green-600 font-medium">
-                    Login
-                </a>
-            </p>
+        <button class="w-full bg-green-500 hover:bg-green-600 text-white p-2 rounded">
+            Register
+        </button>
+    </form>
 
-        </form>
-
-    </div>
+    <p class="text-sm text-center mt-4">
+        Sudah punya akun?
+        <a href="/auth/login" class="text-blue-500 hover:underline">Login</a>
+    </p>
+</div>
 
 </body>
 </html>

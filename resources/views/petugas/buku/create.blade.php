@@ -1,4 +1,4 @@
-@extends('kepala.layouts.app')
+@extends('petugas.layouts.app')
 
 @section('content')
 
@@ -8,7 +8,7 @@
 
             <h3 class="mb-3">Tambah Buku</h3>
 
-            <a href="{{ route('kepala.buku.index') }}" class="btn btn-secondary mb-3">
+            <a href="{{ route('petugas.buku.index') }}" class="btn btn-secondary mb-3">
                 ← Kembali
             </a>
 
@@ -25,7 +25,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('kepala.buku.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('petugas.buku.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
