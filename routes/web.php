@@ -3,7 +3,9 @@
 use App\Http\Controllers\KepalaPerpus\AkunController;
 use App\Http\Controllers\KepalaPerpus\BukuController;
 use App\Http\Controllers\KepalaPerpus\KepalaPerpusController;
+use App\Http\Controllers\KepalaPerpus\LaporanController;
 use App\Http\Controllers\Petugas\BukuController as PetugasBukuController;
+use App\Http\Controllers\Petugas\ProfileController as PetugasProfile;
 use App\Http\Controllers\Auth\AuthController; 
 use App\Http\Controllers\Petugas\PetugasController;
 use App\Http\Controllers\Anggota\AnggotaController;
@@ -13,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE AUTH 
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::get('/auth/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login.post');
@@ -25,47 +27,84 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE ANGGOTA 
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('anggota')->middleware('auth')->name('anggota.')->group(function() {
+
     Route::get('dashboard', [AnggotaController::class, 'dashboard'])->name('dashboard');
-    Route::get('riwayat', [AnggotaController::class, 'riwayat'])->name('riwayat');
-    Route::get('Katalog_buku', [AnggotaController::class, 'Katalog_Buku'])->name('Katalog_buku');
-    Route::get('profile', [AnggotaController::class, 'profile'])->name('profile');
+    Route::get('/riwayat', [AnggotaController::class, 'riwayat'])->name('riwayat');
+    Route::get('Katalog_buku', [AnggotaController::class, 'katalog'])->name('katalog');
+
+    Route::get('/profile', [AnggotaController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit/{id}', [AnggotaController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [AnggotaController::class, 'update'])->name('update');
+
+    // NOTIFIKASI
+    Route::get('/notifikasi', [AnggotaController::class, 'notifikasi'])->name('notifikasi.index');
+
+    // anggota bayar
+    Route::post('/bayar/{id}', [AnggotaController::class, 'bayar'])->name('bayar');
 });
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE PETUGAS 
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('petugas')->middleware('auth')->name('petugas.')->group(function() {
+
     Route::get('/dashboard', [PetugasController::class, 'dashboard'])->name('dashboard');
+
+    /*
+    | PEMINJAMAN
+    */
     Route::get('/peminjaman', [PetugasController::class, 'peminjaman'])->name('peminjaman.index');
-    Route::get('/pengembalian', [PetugasController::class, 'pengembalian'])->name('pengembalian');
-    Route::get('/daftar_buku', [PetugasController::class, 'daftarBuku'])->name('daftar_buku');
-    Route::get('/profile', [PetugasController::class, 'profile'])->name('profile');
     Route::post('/peminjaman/{id}/acc', [PetugasController::class, 'acc'])->name('peminjaman.acc');
+    Route::post('/peminjaman/{id}/tolak', [PetugasController::class, 'tolak'])->name('peminjaman.tolak');
+
+    /*
+    | PENGEMBALIAN
+    */
+    Route::get('/pengembalian', [PetugasController::class, 'pengembalian'])->name('pengembalian.index');
+
+    Route::put('/pengembalian/{id}', [PetugasController::class, 'kembalikan'])->name('pengembalian.kembalikan');
+
+    // petugas verifikasi
+    Route::post('/verifikasi/{id}', [PetugasController::class, 'verifikasi'])->name('verifikasi');
+
+    /*
+    | PROFILE PETUGAS
+    */
+    Route::get('/profile', [PetugasController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit/{id}', [PetugasController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [PetugasController::class, 'update'])->name('update');
+
+    Route::get('/buku/index', [PetugasController::class, 'daftarbuku'])->name('daftar_buku');
 });
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE KEPALA PERPUSTAKAAN
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('kepala')->middleware('auth')->name('kepala.')->group(function () {
 
-    Route::view('/dashboard', 'kepala.dashboard')->name('dashboard');
-
+    Route::get('/dashboard', [KepalaPerpusController::class, 'dashboard'])->name('dashboard');
+    
     Route::get('/profile', [KepalaPerpusController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit/{id}', [KepalaPerpusController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update/{id}', [KepalaPerpusController::class, 'update'])->name('update');
 
-    // AKUN
+    //LAPORAN
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+
+    /*
+    | AKUN
+    */
     Route::prefix('akun')->name('akun.')->group(function () {
         Route::get('/', [AkunController::class, 'index'])->name('index');
         Route::get('/create', [AkunController::class, 'create'])->name('create');
@@ -77,7 +116,9 @@ Route::prefix('kepala')->middleware('auth')->name('kepala.')->group(function () 
         Route::delete('/{id}/delete', [AkunController::class, 'destroy'])->name('destroy');
     });
 
-    // BUKU
+    /*
+    | BUKU
+    */
     Route::prefix('buku')->name('buku.')->group(function () {
         Route::get('/', [BukuController::class, 'index'])->name('index');
         Route::get('/create', [BukuController::class, 'create'])->name('create');
@@ -92,11 +133,12 @@ Route::prefix('kepala')->middleware('auth')->name('kepala.')->group(function () 
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE PETUGAS BUKU
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('petugas/buku')->middleware('auth')->name('petugas.buku.')->group(function () { 
+
     Route::get('/', [PetugasBukuController::class, 'index'])->name('index');
     Route::get('/create', [PetugasBukuController::class, 'create'])->name('create');
     Route::post('/store', [PetugasBukuController::class, 'store'])->name('store');
@@ -104,25 +146,28 @@ Route::prefix('petugas/buku')->middleware('auth')->name('petugas.buku.')->group(
     Route::get('/{buku}/edit', [PetugasBukuController::class, 'edit'])->name('edit');
     Route::put('/{buku}/update', [PetugasBukuController::class, 'update'])->name('update');
     Route::delete('/{buku}/delete', [PetugasBukuController::class, 'destroy'])->name('destroy');
+
 });
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | ROUTE KATALOG BUKU ANGGOTA
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::prefix('anggota/buku')->middleware('auth')->name('anggota.buku.')->group(function() {
+
     Route::get('/', [AnggotaBukuController::class, 'index'])->name('index');          
     Route::get('/{buku}', [AnggotaBukuController::class, 'view'])->name('view');      
     Route::post('/pinjam/{buku}', [PinjamController::class, 'store'])->name('pinjam.store'); 
-}); // <-- pastikan kurung tutup group ini ada
+
+}); 
 
 
 /*
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 | LOGOUT 
-|-------------------------------------------------------------------------- 
+|--------------------------------------------------------------------------
 */
 Route::post('/auth/logout', function (Request $request) {
     auth()->logout();

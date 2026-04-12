@@ -25,7 +25,7 @@
 
             <div class="mb-3">
                 <label>NIP</label>
-                <input type="text" name="nip_petugasPerpus" class="form-control"
+                <input type="text" name="nip_petugas" class="form-control"
                     value="{{ old('nip_petugas', $petugas->nip_petugas) }}">
             </div>
 

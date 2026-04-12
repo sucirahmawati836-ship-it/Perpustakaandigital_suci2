@@ -5,9 +5,35 @@ namespace App\Http\Controllers\KepalaPerpus;
 use App\Models\KepalaPerpus;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\User;
+use App\Models\buku;
+use App\Models\Peminjaman;
 
 class KepalaPerpusController extends Controller
 {
+    public function dashboard()
+    {
+      $totalAkun = User::count();
+      $totalBuku = Buku::count();
+      $totalPeminjaman = Peminjaman::count();
+      $dipinjam = Peminjaman::where('status', 'dipinjam')->count();
+      $dikembalikan = Peminjaman::where('status', 'dikembalikan')->count();
+      $totalDenda = Peminjaman::sum('denda');
+      $peminjamanTerbaru = Peminjaman::with('user','buku')
+        ->latest()
+        ->take(5)
+        ->get();
+
+       return view('kepala.dashboard', compact(
+        'totalAkun',
+        'totalBuku',
+        'totalPeminjaman',
+        'dipinjam',
+        'dikembalikan',
+        'totalDenda',
+        'peminjamanTerbaru'
+     ));
+    }
 
     public function index()
     {
@@ -28,15 +54,15 @@ class KepalaPerpusController extends Controller
     }
 
     public function edit($id)
-{
-    $kepala = KepalaPerpus::with('user')->findOrFail($id);
+    {
+        $kepala = KepalaPerpus::with('user')->findOrFail($id);
 
-    return view('kepala.profile.edit', compact('kepala'));
-}
+        return view('kepala.profile.edit', compact('kepala'));
+    }
 
-public function update(Request $request, $id)
-{
-    $kepala = KepalaPerpus::with('user')->findOrFail($id);
+        public function update(Request $request, $id)
+    {
+        $kepala = KepalaPerpus::with('user')->findOrFail($id);
 
     // validasi
     $request->validate([
@@ -56,7 +82,7 @@ public function update(Request $request, $id)
         'nip_KepalaPerpus' => $request->nip_KepalaPerpus,
     ]);
 
-    return redirect()->route('kepala.profile.index')->with('success', 'Data berhasil diupdate');
-}
+     return redirect()->route('kepala.profile.index')->with('success', 'Data berhasil diupdate');
+    }
 
 }

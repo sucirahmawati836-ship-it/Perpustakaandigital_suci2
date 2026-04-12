@@ -35,7 +35,7 @@
                 </thead>
 
                 <tbody>
-                    @forelse($buku as $i => $b)
+                    @forelse($bukuList as $i => $b)
                     <tr>
                         <td>{{ $i+1 }}</td>
 

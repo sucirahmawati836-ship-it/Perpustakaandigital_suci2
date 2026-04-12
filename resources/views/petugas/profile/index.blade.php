@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <h3 class="mb-4">Profile Petugas</h3>
+    <h3 class="mb-4">Profile Petugas Perpustakaan</h3>
 
     <div class="card shadow p-4 text-center" style="max-width: 400px; margin:auto;">
 
@@ -24,12 +24,12 @@
         </div>
 
         <h5 class="mt-3">{{ $petugas->user->name ?? '-' }}</h5>
-        <p class="text-muted">Petugas</p>
+        <p class="text-muted">Petugas Perpustakaan</p>
 
         <hr>
 
         <p><strong>Email:</strong> {{ $petugas->user->email ?? '-' }}</p>
-        <p><strong>NIP:</strong> {{ $petugas->nip_petugas?? '-' }}</p>
+        <p><strong>NIP:</strong> {{ $petugas->nip_petugas ?? '-' }}</p>
 
         @if($petugas)
         <a href="{{ route('petugas.profile.edit', $petugas->id) }}" class="btn btn-primary mt-3">

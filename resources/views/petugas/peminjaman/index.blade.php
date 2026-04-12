@@ -37,6 +37,8 @@
                             <span class="badge bg-warning text-dark">Menunggu</span>
                         @elseif($p->status == 'dipinjam')
                             <span class="badge bg-success">Dipinjam</span>
+                        @elseif($p->status == 'ditolak')
+                            <span class="badge bg-danger">Ditolak</span>
                         @else
                             <span class="badge bg-secondary">{{ $p->status }}</span>
                         @endif
@@ -45,12 +47,56 @@
                     {{-- AKSI --}}
                     <td>
                         @if($p->status == 'menunggu')
-                            <form action="{{ route('petugas.peminjaman.acc', $p->id) }}" method="POST">
+                            
+                            {{-- ACC --}}
+                            <form action="{{ route('petugas.peminjaman.acc', $p->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button class="btn btn-success btn-sm">
                                     ACC
                                 </button>
                             </form>
+
+                            {{-- TOLAK (PAKAI MODAL) --}}
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#tolakModal{{ $p->id }}">
+                                Tolak
+                            </button>
+
+                            {{-- MODAL --}}
+                            <div class="modal fade" id="tolakModal{{ $p->id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <form action="{{ route('petugas.peminjaman.tolak', $p->id) }}" method="POST">
+                                            @csrf
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Alasan Penolakan</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <label class="form-label">Masukkan alasan:</label>
+
+                                                {{-- pilihan cepat --}}
+                                                <div class="mb-2">
+                                                    <button type="button" class="btn btn-warning btn-sm" onclick="isiAlasan('Stok buku habis', {{ $p->id }})">Stok habis</button>
+                                                    <button type="button" class="btn btn-info btn-sm" onclick="isiAlasan('Data tidak valid', {{ $p->id }})">Data tidak valid</button>
+                                                </div>
+
+                                                <textarea name="alasan" id="alasan{{ $p->id }}" class="form-control" required></textarea>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger">Kirim</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         @else
                             <span class="text-muted">-</span>
                         @endif
@@ -65,4 +111,12 @@
         </table>
     </div>
 </div>
+
+{{-- SCRIPT ISI OTOMATIS --}}
+<script>
+function isiAlasan(text, id){
+    document.getElementById('alasan'+id).value = text;
+}
+</script>
+
 @endsection

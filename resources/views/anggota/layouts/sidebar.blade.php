@@ -2,7 +2,7 @@
 
     <!-- LOGO -->
     <div class="d-flex justify-content-center align-items-center mb-4" style="height:120px;">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" style="max-width:260px; object-fit:contain;">
+        <img src="{{ asset('image/logo_perpus.png') }}" alt="Logo" style="max-width:260px; object-fit:contain;">
     </div>
 
     <ul class="nav flex-column">
@@ -55,7 +55,7 @@
 {{-- STYLE --}}
 <style>
 .sidebar{
-    background-color: #a0e09b;
+    background-color: #064E3B;
 }
 .sidebar-link {
     color: white;
@@ -68,13 +68,13 @@
 
 /* Hover effect */
 .sidebar-link:hover {
-    background-color: #5faa58;
+    background-color: #065F46;
     padding-left: 10px;
 }
 
 /* Active */
 .sidebar-link.active {
-    background-color: #2faa4de5;
+    background-color: #F59E0B;
     font-weight: bold;
 }
 </style>

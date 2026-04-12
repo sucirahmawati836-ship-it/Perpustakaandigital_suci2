@@ -3,11 +3,45 @@
 <head>
     <title>Login E-Perpus</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f1f8f4;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .btn-custom {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #1B5E20;
+        }
+
+        .form-control:focus {
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 0.2rem rgba(46,125,50,0.25);
+        }
+
+        a {
+            color: #2E7D32;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body style="background:#f4f6f9;">
+<body>
 
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow" style="width:350px; border-radius:15px;">
+    <div class="card p-4 shadow" style="width:350px;">
         
         <h4 class="text-center mb-3">Login E-Perpus</h4>
 
@@ -28,44 +62,24 @@
         <form method="POST" action="{{ route('login.post') }}">
             @csrf
 
-            {{-- EMAIL --}}
             <div class="mb-3">
                 <label>Email</label>
-                <input 
-                    type="email" 
-                    name="email" 
-                    class="form-control"
-                    value="{{ old('email') }}" 
-                    required
-                >
-                @error('email')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
             </div>
 
-            {{-- PASSWORD --}}
             <div class="mb-3">
                 <label>Password</label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    class="form-control" 
-                    required
-                >
-                @error('password')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <input type="password" name="password" class="form-control" required>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">
+            <button type="submit" class="btn btn-custom w-100">
                 Login
             </button>
         </form>
 
-        {{-- LINK REGISTER --}}
         <p class="text-center mt-3">
             Belum punya akun?
-            <a href="{{ route('auth.register') }}">Daftar</a>
+            <a href="{{ route('auth.register') }}">Register</a>
         </p>
 
     </div>
