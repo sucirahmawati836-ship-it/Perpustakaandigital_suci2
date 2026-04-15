@@ -6,83 +6,93 @@ use App\Models\KepalaPerpus;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\User;
-use App\Models\buku;
+use App\Models\Buku;
 use App\Models\Peminjaman;
 
 class KepalaPerpusController extends Controller
 {
+    // ================= DASHBOARD =================
     public function dashboard()
     {
-      $totalAkun = User::count();
-      $totalBuku = Buku::count();
-      $totalPeminjaman = Peminjaman::count();
-      $dipinjam = Peminjaman::where('status', 'dipinjam')->count();
-      $dikembalikan = Peminjaman::where('status', 'dikembalikan')->count();
-      $totalDenda = Peminjaman::sum('denda');
-      $peminjamanTerbaru = Peminjaman::with('user','buku')
-        ->latest()
-        ->take(5)
-        ->get();
+        $totalAkun = User::count();
+        $totalBuku = Buku::count();
+        $totalPeminjaman = Peminjaman::count();
+        $dipinjam = Peminjaman::where('status', 'dipinjam')->count();
+        $dikembalikan = Peminjaman::where('status', 'dikembalikan')->count();
+        $totalDenda = Peminjaman::sum('denda');
 
-       return view('kepala.dashboard', compact(
-        'totalAkun',
-        'totalBuku',
-        'totalPeminjaman',
-        'dipinjam',
-        'dikembalikan',
-        'totalDenda',
-        'peminjamanTerbaru'
-     ));
+        $peminjamanTerbaru = Peminjaman::with('user','buku')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('kepala.dashboard', compact(
+            'totalAkun',
+            'totalBuku',
+            'totalPeminjaman',
+            'dipinjam',
+            'dikembalikan',
+            'totalDenda',
+            'peminjamanTerbaru'
+        ));
     }
 
+    // ================= PROFILE INDEX =================
     public function index()
     {
-        // ambil 1 data kepala perpus (sementara)
-        $kepala = KepalaPerpus::with('user')->first();
+        $user = auth()->user();
 
-        // ambil inisial dari nama
+        $kepala = KepalaPerpus::where('user_id', $user->id)->first();
+
+        // buat inisial
         $inisial = '';
-        if ($kepala && $kepala->user) {
-            $nama = explode(' ', $kepala->user->name);
+        $nama = explode(' ', $user->name);
 
-            foreach ($nama as $n) {
-                $inisial .= strtoupper(substr($n, 0, 1));
-            }
+        foreach ($nama as $n) {
+            $inisial .= strtoupper(substr($n, 0, 1));
         }
 
-        return view('kepala.profile.index', compact('kepala', 'inisial'));
+        return view('kepala.profile.index', compact('user', 'kepala', 'inisial'));
     }
 
-    public function edit($id)
+    // ================= EDIT PROFILE  =================
+    public function edit()
     {
-        $kepala = KepalaPerpus::with('user')->findOrFail($id);
+        $user = auth()->user();
 
-        return view('kepala.profile.edit', compact('kepala'));
+        $kepala = KepalaPerpus::where('user_id', $user->id)->first();
+
+        return view('kepala.profile.edit', compact('user', 'kepala'));
     }
 
-        public function update(Request $request, $id)
+    // ================= UPDATE PROFILE  =================
+    public function update(Request $request)
     {
-        $kepala = KepalaPerpus::with('user')->findOrFail($id);
+        $user = auth()->user();
 
-    // validasi
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'nip_KepalaPerpus' => 'required',
-    ]);
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'nip_kepala' => 'nullable|max:50',
+        ]);
 
-    // update user
-    $kepala->user->update([
-        'name' => $request->name,
-        'email' => $request->email,
-    ]);
+        // update user
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'nip_kepala' => $request->nip_kepala,
+        ]);
 
-    // update kepala
-    $kepala->update([
-        'nip_KepalaPerpus' => $request->nip_KepalaPerpus,
-    ]);
+        // update kepala (kalau ada datanya)
+        $kepala = KepalaPerpus::where('user_id', $user->id)->first();
 
-     return redirect()->route('kepala.profile.index')->with('success', 'Data berhasil diupdate');
+        if ($kepala) {
+            $kepala->update([
+             'nip_kepala' => $request->nip_kepala,
+            ]);
+        }
+
+        return redirect()->route('kepala.profile.index')
+            ->with('success', 'Data berhasil diupdate');
     }
-
 }

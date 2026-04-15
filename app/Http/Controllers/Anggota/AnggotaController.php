@@ -8,43 +8,43 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Buku;
 use App\Models\Peminjaman;
 use App\Models\Anggota;
-use App\Models\Notifikasi; 
+use App\Models\Notifikasi;
 
 class AnggotaController extends Controller
 {
     // ================= DASHBOARD =================
     public function dashboard()
     {
-      $user = Auth::user();
+        $user = Auth::user();
 
-      $totalBuku = Buku::count();
+        $totalBuku = Buku::count();
 
-      $bukuDipinjam = Peminjaman::where('user_id', $user->id)
-        ->where('status', 'dipinjam')
-        ->count();
+        $bukuDipinjam = Peminjaman::where('user_id', $user->id)
+            ->where('status', 'dipinjam')
+            ->count();
 
-      $jumlahNotifikasi = Notifikasi::where('user_id', Auth::id())
-        ->where('dibaca', false)
-        ->count();
+        $jumlahNotifikasi = Notifikasi::where('user_id', $user->id)
+            ->where('dibaca', false)
+            ->count();
 
-      $bukuTerbaru = Buku::latest()->take(6)->get();
+        $bukuTerbaru = Buku::latest()->take(6)->get();
 
-   
-      $riwayat = Peminjaman::with('buku')
-        ->where('user_id', $user->id)
-        ->latest()
-        ->take(5)
-        ->get();
+        $riwayat = Peminjaman::with('buku')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get();
 
-    return view('anggota.dashboard', compact(
-        'totalBuku',
-        'bukuDipinjam',
-        'jumlahNotifikasi',
-        'bukuTerbaru',
-        'riwayat'
-     ));
+        return view('anggota.dashboard', compact(
+            'totalBuku',
+            'bukuDipinjam',
+            'jumlahNotifikasi',
+            'bukuTerbaru',
+            'riwayat'
+        ));
     }
-    // ================= RIWAYAT PEMINJAMAN =================
+
+    // ================= RIWAYAT =================
     public function riwayat()
     {
         $peminjamanList = Peminjaman::where('user_id', auth()->id())
@@ -55,7 +55,7 @@ class AnggotaController extends Controller
         return view('anggota.riwayat', compact('peminjamanList'));
     }
 
-    // ================= DAFTAR BUKU =================
+    // ================= KATALOG =================
     public function katalog()
     {
         $bukuList = Buku::all();
@@ -65,80 +65,83 @@ class AnggotaController extends Controller
     // ================= PROFILE =================
     public function index()
     {
-        $anggota = Anggota::with('user')->first();
+        $user = Auth::user();
+
+        $anggota = Anggota::where('user_id', $user->id)->first();
 
         $inisial = '';
-        if ($anggota && $anggota->user) {
-            $nama = explode(' ', $anggota->user->name);
-
-            foreach ($nama as $n) {
-                $inisial .= strtoupper(substr($n, 0, 1));
-            }
+        foreach (explode(' ', $user->name) as $n) {
+            $inisial .= strtoupper(substr($n, 0, 1));
         }
 
-        return view('anggota.profile.index', compact('anggota', 'inisial'));
+        return view('anggota.profile.index', compact('user', 'anggota', 'inisial'));
     }
 
-    // ================= EDIT PROFILE =================
-    public function edit($id)
+    public function edit()
     {
-        $anggota = Anggota::with('user')->findOrFail($id);
+        $user = Auth::user();
 
-        return view('anggota.profile.edit', compact('anggota'));
+        $anggota = Anggota::firstOrCreate(
+            ['user_id' => $user->id],
+            ['nis' => '', 'kelas' => '', 'alamat' => '']
+        );
+
+        return view('anggota.profile.edit', compact('user', 'anggota'));
     }
 
-    // ================= UPDATE PROFILE =================
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $anggota = Anggota::with('user')->findOrFail($id);
+        $user = Auth::user();
+
+        $anggota = Anggota::firstOrCreate(
+            ['user_id' => $user->id],
+            ['nis' => '', 'kelas' => '', 'alamat' => '']
+        );
 
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'nis' => 'required',
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'nis' => 'required'
         ]);
 
-        $anggota->user->update([
+        $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
 
         $anggota->update([
-            'nis' => $request->nis,
+            'nis' => $request->nis
         ]);
 
         return redirect()->route('anggota.profile.index')
-            ->with('success', 'Data berhasil diupdate');
+            ->with('success', 'Profile berhasil diupdate');
     }
 
     // ================= NOTIFIKASI =================
     public function notifikasi()
     {
-     $user = Auth::user();
+        $user = Auth::user();
 
-    // Ambil semua notifikasi 
-     $notifikasi = Notifikasi::where('user_id', $user->id)
-        ->latest()
-        ->get();
+        $notifikasi = Notifikasi::where('user_id', $user->id)
+            ->latest()
+            ->get();
 
-    // Jumlah yang belum dibaca
-     $jumlahNotifikasi = Notifikasi::where('user_id', $user->id)
-        ->where('dibaca', false)
-        ->count();
+        Notifikasi::where('user_id', $user->id)
+            ->where('dibaca', false)
+            ->update(['dibaca' => true]);
 
-    // Tandai otomatis jadi dibaca saat halaman dibuka
-    Notifikasi::where('user_id', $user->id)
-        ->where('dibaca', false)
-        ->update(['dibaca' => true]);
+        $jumlahNotifikasi = Notifikasi::where('user_id', $user->id)
+            ->where('dibaca', false)
+            ->count();
 
-      return view('anggota.notifikasi.index', compact('notifikasi', 'jumlahNotifikasi'));
+        return view('anggota.notifikasi.index', compact('notifikasi', 'jumlahNotifikasi'));
     }
 
-    // ================= (RIWAYAT PEMBAYARAN DETAIL) =================
+    // ================= RIWAYAT PEMBAYARAN =================
     public function riwayatPembayaran()
     {
         $peminjamanList = Peminjaman::where('user_id', auth()->id())
-            ->whereNotNull('metode_pembayaran') // hanya yang sudah bayar
+            ->whereNotNull('metode_pembayaran')
             ->with('buku')
             ->latest()
             ->get();
@@ -146,7 +149,7 @@ class AnggotaController extends Controller
         return view('anggota.riwayat_pembayaran', compact('peminjamanList'));
     }
 
-    // ================= PROSES BAYAR DENDA =================
+    // ================= BAYAR DENDA  =================
     public function bayar(Request $request, $id)
     {
         $request->validate([
@@ -155,11 +158,28 @@ class AnggotaController extends Controller
 
         $p = Peminjaman::findOrFail($id);
 
+        //  tidak boleh bayar kalau tidak ada denda
+        if (($p->denda ?? 0) <= 0) {
+            return back()->with('error', 'Tidak ada denda');
+        }
+
+        //  sudah lunas
+        if ($p->status_denda === 'lunas') {
+            return back()->with('error', 'Sudah dibayar');
+        }
+
+        // sudah menunggu
+        if ($p->status_denda === 'menunggu_verifikasi') {
+            return back()->with('error', 'Sedang menunggu verifikasi petugas');
+        }
+
+        //  kirim ke petugas
         $p->update([
             'metode_pembayaran' => $request->metode_pembayaran,
-            'status_denda' => 'menunggu_verifikasi'
+            'status_denda' => 'menunggu_verifikasi',
+            'tanggal_bayar' => now()
         ]);
 
-        return back()->with('success', 'Pembayaran berhasil dikirim');
+        return back()->with('success', 'Pembayaran berhasil dikirim, menunggu verifikasi petugas');
     }
 }

@@ -10,7 +10,7 @@ class KepalaPerpus extends Model
 
     protected $fillable = [
         'user_id',
-        'nip_KepalaPerpus',
+        'nip_kepala',
     ];
 
     public function user()

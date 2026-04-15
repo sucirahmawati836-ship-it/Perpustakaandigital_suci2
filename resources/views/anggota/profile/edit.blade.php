@@ -1,37 +1,32 @@
 @extends('anggota.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container mt-4">
 
-    <h3 class="mb-4">Edit Profile</h3>
+    <div class="card shadow p-4" style="max-width:500px; margin:auto;">
 
-    <div class="card p-4 shadow" style="max-width:500px; margin:auto;">
+        <h4>Edit Profile</h4>
 
-        <form action="{{ route('anggota.update', $anggota->id) }}" method="POST">
+        <form method="POST" action="{{ route('anggota.profile.update') }}">
             @csrf
             @method('PUT')
 
             <div class="mb-3">
                 <label>Nama</label>
-                <input type="text" name="name" class="form-control"
-                    value="{{ old('name', $anggota->user->name) }}">
+                <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
             </div>
 
             <div class="mb-3">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control"
-                    value="{{ old('email', $anggota->user->email) }}">
+                <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
             </div>
 
             <div class="mb-3">
-                <label>NIS</label>
-                <input type="text" name="nis" class="form-control"
-                    value="{{ old('nis', $anggota->nis) }}">
+              <label>NIS</label>
+              <input type="text" name="nis" class="form-control" value="{{ $anggota->nis ?? '' }}" required>
             </div>
 
-            <button class="btn btn-success">Simpan</button>
-            <a href="{{ route('anggota.profile.index') }}" class="btn btn-secondary">Kembali</a>
-
+            <button class="btn btn-success w-100">Simpan</button>
         </form>
 
     </div>

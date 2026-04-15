@@ -38,8 +38,8 @@ Route::prefix('anggota')->middleware('auth')->name('anggota.')->group(function()
     Route::get('Katalog_buku', [AnggotaController::class, 'katalog'])->name('katalog');
 
     Route::get('/profile', [AnggotaController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit/{id}', [AnggotaController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update/{id}', [AnggotaController::class, 'update'])->name('update');
+    Route::get('/profile/edit', [AnggotaController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [AnggotaController::class, 'update'])->name('profile.update');
 
     // NOTIFIKASI
     Route::get('/notifikasi', [AnggotaController::class, 'notifikasi'])->name('notifikasi.index');
@@ -62,14 +62,13 @@ Route::prefix('petugas')->middleware('auth')->name('petugas.')->group(function()
     | PEMINJAMAN
     */
     Route::get('/peminjaman', [PetugasController::class, 'peminjaman'])->name('peminjaman.index');
-    Route::post('/peminjaman/{id}/acc', [PetugasController::class, 'acc'])->name('peminjaman.acc');
+    Route::post('/peminjaman/{id}/terima', [PetugasController::class, 'terima'])->name('peminjaman.terima');
     Route::post('/peminjaman/{id}/tolak', [PetugasController::class, 'tolak'])->name('peminjaman.tolak');
 
     /*
     | PENGEMBALIAN
     */
     Route::get('/pengembalian', [PetugasController::class, 'pengembalian'])->name('pengembalian.index');
-
     Route::put('/pengembalian/{id}', [PetugasController::class, 'kembalikan'])->name('pengembalian.kembalikan');
 
     // petugas verifikasi
@@ -79,10 +78,12 @@ Route::prefix('petugas')->middleware('auth')->name('petugas.')->group(function()
     | PROFILE PETUGAS
     */
     Route::get('/profile', [PetugasController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit/{id}', [PetugasController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update/{id}', [PetugasController::class, 'update'])->name('update');
+    Route::get('/profile/edit', [PetugasController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [PetugasController::class, 'update'])->name('profile.update');
 
-    Route::get('/buku/index', [PetugasController::class, 'daftarbuku'])->name('daftar_buku');
+    //BUKTI PEMBAYRAN
+    Route::get('/petugas/struk/{id}', [PetugasController::class, 'struk'])->name('struk');
+
 });
 
 
@@ -96,8 +97,8 @@ Route::prefix('kepala')->middleware('auth')->name('kepala.')->group(function () 
     Route::get('/dashboard', [KepalaPerpusController::class, 'dashboard'])->name('dashboard');
     
     Route::get('/profile', [KepalaPerpusController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit/{id}', [KepalaPerpusController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update/{id}', [KepalaPerpusController::class, 'update'])->name('update');
+    Route::get('/profile/edit', [KepalaPerpusController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [KepalaPerpusController::class, 'update'])->name('profile.update');
 
     //LAPORAN
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');

@@ -49,10 +49,10 @@
                         @if($p->status == 'menunggu')
                             
                             {{-- ACC --}}
-                            <form action="{{ route('petugas.peminjaman.acc', $p->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('petugas.peminjaman.terima', $p->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button class="btn btn-success btn-sm">
-                                    ACC
+                                    Terima
                                 </button>
                             </form>
 

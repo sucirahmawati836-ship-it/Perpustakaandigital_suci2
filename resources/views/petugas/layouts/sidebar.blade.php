@@ -39,10 +39,10 @@
             </a>
         </li>
 
-        {{-- Profile --}}
+        {{-- PROFILE --}}
         <li class="nav-item mb-2">
             <a href="{{ route('petugas.profile.index') }}" 
-               class="nav-link sidebar-link {{ request()->is('petugas/profile/index') ? 'active' : '' }}">
+               class="nav-link sidebar-link {{ request()->is('petugas/profile*') ? 'active' : '' }}">
                 <i class="bi bi-person-circle"></i> Profile
             </a>
         </li>
@@ -74,7 +74,7 @@
     gap: 10px;
 }
 
-/* Hover effect */
+/* Hover */
 .sidebar-link:hover {
     background-color: #065F46;
     padding-left: 10px;

@@ -80,7 +80,7 @@
                 🔁 Pengembalian
             </a>
 
-            <a href="{{ route('petugas.daftar_buku') }}" class="btn btn-primary btn-sm rounded-pill">
+            <a href="{{ route('petugas.buku.index') }}" class="btn btn-primary btn-sm rounded-pill">
                 📚 Buku
             </a>
         </div>

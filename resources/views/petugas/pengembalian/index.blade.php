@@ -1,6 +1,7 @@
 @extends('petugas.layouts.app')
 
 @section('content')
+
 <div class="container mt-4">
     <h3 class="mb-4">Data Pengembalian</h3>
 
@@ -9,150 +10,194 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- Tabel --}}
     <div class="card shadow-sm p-3">
-        <table class="table table-bordered align-middle">
+        <table class="table table-bordered align-middle text-center">
             <thead class="table-light">
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
                     <th>Judul Buku</th>
-                    <th>Tanggal Pinjam</th>
+                    <th>Tgl Pinjam</th>
+                    <th>Tgl Tempo</th>
+                    <th>Tgl Pengembalian</th>
                     <th>Status</th>
                     <th>Denda</th>
+                    <th>Kondisi</th>
                     <th>Status Denda</th>
-                    <th>Metode Bayar</th> {{-- TAMBAHAN --}}
+                    <th>Metode</th>
                     <th>Aksi</th>
+                    <th>Struk</th>
                 </tr>
             </thead>
 
             <tbody>
                 @forelse($pengembalianList as $i => $p)
                 <tr>
+
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $p->user->name }}</td>
-                    <td>{{ $p->buku->judul_buku }}</td>
-                    <td>{{ $p->tanggal_pinjam ?? '-' }}</td>
+                    <td class="text-start">{{ $p->buku->judul_buku }}</td>
+
+                    <td>
+                        {{ $p->tanggal_pinjam ? \Carbon\Carbon::parse($p->tanggal_pinjam)->format('d M Y') : '-' }}
+                    </td>
+
+                    <td>
+                        {{ $p->tanggal_jatuh_tempo ? \Carbon\Carbon::parse($p->tanggal_jatuh_tempo)->format('d M Y') : '-' }}
+                    </td>
+
+                    {{-- TANGGAL PENGEMBALIAN --}}
+                    <td>
+                        {{ $p->tanggal_kembali 
+                            ? \Carbon\Carbon::parse($p->tanggal_kembali)->format('d M Y H:i') 
+                            : '-' }}
+                    </td>
 
                     {{-- STATUS --}}
                     <td>
-                        <span class="badge bg-success">Dipinjam</span>
-
-                        @php
-                            $batas = \Carbon\Carbon::parse($p->tanggal_jatuh_tempo ?? $p->tanggal_pinjam)->addDays(3);
-                        @endphp
-
-                        @if(now()->greaterThan($batas))
-                            <span class="badge bg-danger">Terlambat</span>
+                        @if($p->status == 'dikembalikan')
+                            <span class="badge bg-success">Dikembalikan</span>
+                        @else
+                            <span class="badge bg-warning">Dipinjam</span>
                         @endif
                     </td>
 
                     {{-- DENDA --}}
                     <td>
-                        @if($p->denda > 0)
+                        @php
+                            $denda = $p->denda ?? 0;
+                        @endphp
+
+                        @if($denda > 0)
                             <span class="text-danger fw-bold">
-                                Rp {{ number_format($p->denda) }}
+                                Rp {{ number_format($denda, 0, ',', '.') }}
                             </span>
                         @else
-                            <span class="text-success">Rp 0</span>
+                            Rp 0
                         @endif
                     </td>
 
-                    {{-- STATUS DENDA --}}
+                    {{-- KONDISI --}}
                     <td>
-                        @if($p->status_denda == 'lunas')
-                            <span class="badge bg-success">Lunas</span>
-
-                        @elseif($p->status_denda == 'menunggu_verifikasi')
-                            <span class="badge bg-warning">Menunggu Verifikasi</span>
-
-                        @else
-                            <span class="badge bg-danger">Belum Bayar</span>
-                        @endif
-                    </td>
-
-                    {{-- METODE PEMBAYARAN (TAMBAHAN) --}}
-                    <td>
-                        @if($p->status_denda == 'menunggu_verifikasi')
-                            <span class="badge bg-warning">
-                                {{ ucfirst($p->metode_pembayaran) ?? '-' }}
-                            </span>
-
-                        @elseif($p->status_denda == 'lunas')
-                            <span class="badge bg-success">
-                                {{ ucfirst($p->metode_pembayaran) ?? '-' }}
-                            </span>
-
+                        @if($p->kondisi_buku == 'baik')
+                            <span class="badge bg-success">Baik</span>
+                        @elseif($p->kondisi_buku == 'rusak')
+                            <span class="badge bg-warning">Rusak</span>
+                        @elseif($p->kondisi_buku == 'hilang')
+                            <span class="badge bg-danger">Hilang</span>
                         @else
                             -
                         @endif
                     </td>
 
+                    {{-- STATUS DENDA --}}
+                    <td>
+                        @if(($p->denda ?? 0) == 0)
+                            -
+                        @elseif($p->status_denda == 'lunas')
+                            <span class="badge bg-success">Lunas</span>
+                        @elseif($p->status_denda == 'menunggu_verifikasi')
+                            <span class="badge bg-warning">Menunggu</span>
+                        @else
+                            <span class="badge bg-danger">Belum Bayar</span>
+                        @endif
+                    </td>
+
+                    {{-- METODE --}}
+                    <td>
+                        {{ $p->metode_pembayaran ?? '-' }}
+                    </td>
+
                     {{-- AKSI --}}
                     <td>
-                        {{-- Tombol Kembalikan --}}
+
                         @if($p->status != 'dikembalikan')
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDenda{{ $p->id }}">
-                                 Kembalikan
+                            <button class="btn btn-primary btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal{{ $p->id }}">
+                                Kembalikan
                             </button>
                         @else
                             <span class="badge bg-success">Selesai</span>
                         @endif
 
-                        {{-- VERIFIKASI --}}
                         @if($p->status_denda == 'menunggu_verifikasi')
-                          <form action="{{ route('petugas.verifikasi', $p->id) }}" method="POST" class="mt-1">
-                            @csrf
-                            <button class="btn btn-success btn-sm w-100">
-                              Verifikasi Pembayaran
-                            </button>
-                         </form>
+                            <form action="{{ route('petugas.verifikasi', $p->id) }}"
+                                method="POST"
+                                class="mt-1">
+                                @csrf
+                                <button class="btn btn-success btn-sm w-100">
+                                    Verifikasi Pembayaran
+                                </button>
+                            </form>
+                        @endif
+
+                    </td>
+
+                    {{-- STRUK --}}
+                    <td>
+                        @if($p->status_denda == 'lunas')
+                            <a href="{{ route('petugas.struk', $p->id) }}"
+                               target="_blank"
+                               class="btn btn-secondary btn-sm">
+                                Cetak
+                            </a>
+                        @else
+                            -
                         @endif
                     </td>
+
                 </tr>
 
-                {{-- MODAL PILIH DENDA --}}
-                <div class="modal fade" id="modalDenda{{ $p->id }}" tabindex="-1">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
+                {{-- MODAL --}}
+                <div class="modal fade" id="modal{{ $p->id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
 
-                      <div class="modal-header">
-                        <h5 class="modal-title">Pilih Jenis Denda</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                      </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Kondisi Buku</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
 
-                      <div class="modal-body text-center">
-                        <p>Pilih kondisi buku:</p>
+                            <div class="modal-body text-center">
 
-                        <form action="{{ route('petugas.pengembalian.kembalikan', $p->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                                <form action="{{ route('petugas.pengembalian.kembalikan', $p->id) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('PUT')
 
-                            <button type="submit" name="jenis_denda" value="baik" class="btn btn-success m-1">
-                                Baik
-                            </button>
+                                    <button name="jenis_denda" value="baik"
+                                        class="btn btn-success m-1">
+                                        Baik
+                                    </button>
 
-                            <button type="submit" name="jenis_denda" value="rusak" class="btn btn-warning m-1">
-                                Rusak
-                            </button>
+                                    <button name="jenis_denda" value="rusak"
+                                        class="btn btn-warning m-1">
+                                        Rusak
+                                    </button>
 
-                            <button type="submit" name="jenis_denda" value="hilang" class="btn btn-danger m-1">
-                                Hilang
-                            </button>
-                        </form>
-                      </div>
+                                    <button name="jenis_denda" value="hilang"
+                                        class="btn btn-danger m-1">
+                                        Hilang
+                                    </button>
 
+                                </form>
+
+                            </div>
+
+                        </div>
                     </div>
-                  </div>
                 </div>
 
                 @empty
                 <tr>
-                    <td colspan="9" class="text-center">Tidak ada data pengembalian</td>
+                    <td colspan="13">Tidak ada data</td>
                 </tr>
                 @endforelse
+
             </tbody>
         </table>
     </div>
 </div>
+
 @endsection

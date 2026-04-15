@@ -1,36 +1,37 @@
 @extends('kepala.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container mt-4">
 
-    <h3 class="mb-4">Edit Profile</h3>
+    <div class="card shadow p-4" style="max-width:500px; margin:auto;">
 
-    <div class="card p-4 shadow" style="max-width:500px; margin:auto;">
+        <h4>Edit Profile Kepala</h4>
 
-        <form action="{{ route('kepala.update', $kepala->id) }}" method="POST">
+        <form method="POST" action="{{ route('kepala.profile.update') }}">
             @csrf
             @method('PUT')
 
             <div class="mb-3">
                 <label>Nama</label>
                 <input type="text" name="name" class="form-control"
-                    value="{{ old('name', $kepala->user->name) }}">
+                       value="{{ $user->name }}" required>
             </div>
 
             <div class="mb-3">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control"
-                    value="{{ old('email', $kepala->user->email) }}">
+                       value="{{ $user->email }}" required>
             </div>
 
             <div class="mb-3">
-                <label>NIP</label>
-                <input type="text" name="nip_KepalaPerpus" class="form-control"
-                    value="{{ old('nip_kepala', $kepala->nip_KepalaPerpus) }}">
+                <label>NIP Kepala</label>
+                <input type="text" name="nip_kepala" class="form-control"
+                       value="{{ $user->nip_kepala ?? '' }}">
             </div>
 
-            <button class="btn btn-success">Simpan</button>
-            <a href="{{ route('kepala.profile.index') }}" class="btn btn-secondary">Kembali</a>
+            <button type="submit" class="btn btn-success w-100">
+                Simpan
+            </button>
 
         </form>
 

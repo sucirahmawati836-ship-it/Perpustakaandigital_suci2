@@ -80,9 +80,8 @@
                     <h6 class="fw-bold mb-1">{{ $buku->judul }}</h6>
                     <small class="text-muted d-block">{{ $buku->pengarang }}</small>
 
-                    <a href="{{ route('anggota.katalog') }}" 
-                       class="btn btn-outline-primary btn-sm mt-2 rounded-pill">
-                        Lihat Detail
+                    <a href="{{ route('anggota.buku.view', $buku) }}" class="btn btn-primary btn-sm">
+                      Lihat Detail
                     </a>
                 </div>
             </div>

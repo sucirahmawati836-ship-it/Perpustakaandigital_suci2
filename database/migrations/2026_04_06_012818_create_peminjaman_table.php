@@ -32,7 +32,7 @@ return new class extends Migration
             $table->enum('status_denda', ['belum_bayar', 'menunggu_verifikasi', 'lunas'])
                   ->default('belum_bayar');
 
-            // PEMBAYARAN
+            // PEMBAYARANA
             $table->string('metode_pembayaran')->nullable();
             $table->date('tanggal_bayar')->nullable();
 

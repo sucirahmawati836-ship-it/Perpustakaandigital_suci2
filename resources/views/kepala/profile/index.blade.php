@@ -1,44 +1,54 @@
 @extends('kepala.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container mt-4">
 
-    <h3 class="mb-4">Profile Kepala Perpustakaan</h3>
-
-    <div class="card shadow p-4 text-center" style="max-width: 400px; margin:auto;">
+    <div class="card shadow border-0 text-center p-4" style="max-width:450px; margin:auto; border-radius:15px;">
 
         {{-- INISIAL --}}
         <div style="
-            width: 80px;
-            height: 80px;
-            background: #0d6efd;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            margin: auto;
+            width:90px;
+            height:90px;
+            background:#198754;
+            color:white;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:35px;
+            margin:auto;
         ">
             {{ $inisial }}
         </div>
 
-        <h5 class="mt-3">{{ $kepala->user->name ?? '-' }}</h5>
+        {{-- NAMA --}}
+        <h4 class="mt-3">{{ $user->name }}</h4>
         <p class="text-muted">Kepala Perpustakaan</p>
 
         <hr>
 
-        <p><strong>Email:</strong> {{ $kepala->user->email ?? '-' }}</p>
-        <p><strong>NIP:</strong> {{ $kepala->nip_KepalaPerpus ?? '-' }}</p>
+        {{-- DATA --}}
+        <div class="text-start mt-3">
 
-        @if($kepala)
-        <a href="{{ route('kepala.profile.edit', $kepala->id) }}" class="btn btn-primary mt-3">
-            Edit Profile
+            <p>
+                <strong>Email:</strong><br>
+                <span class="text-muted">{{ $user->email }}</span>
+            </p>
+
+            <p>
+                <strong>NIP:</strong><br>
+                <span class="text-muted">{{ $user->nip_kepala ?? '-' }}</span>
+            </p>
+
+        </div>
+
+        {{-- BUTTON --}}
+        <a href="{{ route('kepala.profile.edit') }}"
+           class="btn btn-success mt-3 rounded-pill w-100">
+           ✏️ Edit Profile
         </a>
-        @endif
 
     </div>
-    
 
 </div>
 @endsection

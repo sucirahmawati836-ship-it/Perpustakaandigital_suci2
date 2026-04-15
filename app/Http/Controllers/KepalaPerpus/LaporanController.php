@@ -9,9 +9,25 @@ class LaporanController extends Controller
 {
     public function index()
     {
-       $pengembalian = Peminjaman::with(['user','buku'])
+        // PEMINJAMAN
+        $peminjaman = Peminjaman::with(['user','buku'])
+            ->where('status', 'dipinjam')
+            ->get();
+
+        // PENGEMBALIAN
+        $pengembalian = Peminjaman::with(['user','buku'])
             ->where('status', 'dikembalikan')
             ->get();
-        return view('kepala.laporan.index', compact('pengembalian'));
+
+        // DENDA
+        $denda = Peminjaman::with(['user','buku'])
+            ->where('denda', '>', 0)
+            ->get();
+
+        return view('kepala.laporan.index', compact(
+            'peminjaman',
+            'pengembalian',
+            'denda'
+        ));
     }
 }
